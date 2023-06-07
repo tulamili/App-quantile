@@ -2,7 +2,7 @@
 use 5.014 ; use strict ; use warnings ; 
 use POSIX qw [ floor ceil ] ; 
 use FindBin qw [ $Script $Bin ] ; 
-use Getopt::Std ; getopts '=@:LIbhi:lp:q:stw02:3' , \my %o ; 
+use Getopt::Std ; getopts '=@:LIabhi:lp:q:stw02:3' , \my %o ; 
 use List::Util qw[ sum sum0 ] ;
 use Term::ANSIColor qw [ color :constants ] ; $Term::ANSIColor::AUTORESET = 1 ; 
 use Time::HiRes qw[ alarm tv_interval gettimeofday ] ;
@@ -52,7 +52,8 @@ sub proc_read ( ) {
 }
 
 sub proc_out ( ) { 
-  say UNDERLINE join "\t" , @xco , 'num' , $o{L} ? 'Layer' : '' ;   # 出力表の表頭
+  #print sum0(@V)/$Vd , "\t" if $o{a} ; 
+  say UNDERLINE join "\t" , @xco , 'num' , $o{L} ? 'Layer' : '' , $o{a} ? 'average' : ();   # 出力表の表頭
   do { @V = @{ $VV{$_} } ; LayerOut ( $_ ) } for sort keys %VV ; # 出力表の中身 # <-- - ソートの仕方に数値ソートのオプションが欲しい。
 }
 
@@ -62,8 +63,11 @@ sub LayerOut ( $ ) {  # 出力各行についての処理 :
   @V = $o{s} ? sort @V : sort { $a <=> $b } @V ;
 
   sub LineOut ( &$ ) { # 出力1行の処理内容
-    say join "\t", map ( $_[0]->($_) + 0, @xco ) , ($Vd+1) . $_[1] , $layer if!$o{s} ;
-    say join "\t", map ( $_[0]->($_) .'', @xco ) , ($Vd+1) . $_[1] , $layer if $o{s} ; # dualvar 対策で冗長になってしまった。
+    my @out ; 
+    @out = ( ( map { $_[0]->($_) + 0 }  @xco ) , ($Vd+1) . $_[1] , $layer ) if !$o{s} ;
+    @out = ( ( map { $_[0]->($_) .'' }  @xco ) , ($Vd+1) . $_[1] , $layer ) if $o{s} ; # dualvar 対策で冗長になってしまった。
+    push @out , sum0(@V)/($Vd+1) if $o{a} ; # && $Vd > 0 ; 
+    say join "\t" , @out ; 
   } 
   # 分位点の計算法 (概念的に考えられる低い方の値、高い方の値、線型補間、単純に近い値)
   sub low_val  ( $ ) { $V[ floor $_[0] * $Vd / $Q ]       } ; 
@@ -141,6 +145,7 @@ sub Info2ndry ( ) {
   -= : 最初の行を読み飛ばす。
   -q N : 分位分割の数Nを指定する。
   -p 1..5など : 何番目の分位点を出力するかを指定する。小数も指定可能。, や .. が使える。
+  -a : 平均値も出力する(最も右の列に)。
 
   -h : 分位点の計算において、考えられる大きい値についても、出力する。
   -I : 分位点を観測値に存在する値ではなくて、線形補間した値を用いる。
@@ -168,6 +173,7 @@ sub Info2ndry ( ) {
    * 保守のために、関数内の関数を活用しようか。
    * -w の場合に、 -h, -I, -l も考慮したい。今は単純なもののみである。
    ** -w 無しの -3 の挙動の設計が不自然なので、再検討 # <--- --  "-w" は自己重み付け , -3 は、重み付け自体を表している
+   * -a 指定時に、-L がないと、不自然な空列が右から2列目に発生。
 =cut 
 
 ## ヘルプとバージョン情報
