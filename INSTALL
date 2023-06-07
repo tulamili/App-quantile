@@ -1,0 +1,10 @@
+
+## INSTALL
+
+cpanm App::quantile
+
+
+## UNINSTALL 
+
+cpanm -U App::quantile
+
