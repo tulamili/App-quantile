@@ -47,7 +47,6 @@ This module provides a Unix-like command `F<quantile>'.
   --help opt : Shows the option help.
   --version : Shows the version information.
  
-
 =head1 AUTHOR
 
 下野寿之 Toshiyuki SHIMONO <bin4tsv@gmail.com> The Institute of Statistical Mathematics, a visiting researcher. 

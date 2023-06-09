@@ -111,9 +111,9 @@ sub midreport ( ) {
   my @out ; 
   my @t2 = gettimeofday ; 
   my @dt = (localtime $t2[0])[5,4,3,2,1,0] ;
-  push @out, "[$Script  ", (sprintf "%02d-%02d-%02d %02d:%02d:%02d.%06d", $dt[0]+1900,$dt[1]+1,@dt[2..5],$t2[1]) , "]" ;  #  <-- 標準出力に書込み
+  push @out, "[$Script  ", (sprintf "%02d-%02d-%02d %02d:%02d:%02d.%03d", $dt[0]+1900,$dt[1]+1,@dt[2..5],$t2[1]*1e-3) , "]" ;  #  <-- 標準出力に書込み
   push @out, " $lines read" ; 
-  print STDERR GREEN @out , "\n" ;
+  print STDERR FAINT BOLD ITALIC GREEN @out , "\n" ;
 }
 
 sub Info2ndry ( ) { 
@@ -124,7 +124,7 @@ sub Info2ndry ( ) {
   $out .= BRIGHT_CYAN $LL ; 
   $out .= CYAN "  (" . tv_interval ($time0) . " sec.) " ; 
   $out .= BRIGHT_CYAN $Q . CYAN " divisions." ;
-  say STDERR $out ; 
+  say STDERR FAINT BOLD $out ; 
 } 
 
 =encoding utf8 
