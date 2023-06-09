@@ -1,6 +1,6 @@
 package App::quantile ;  
-our $VERSION = '0.013' ; 
-our $DATE = '2023-06-09T10:05+09:00' ; 
+our $VERSION = '0.014' ; 
+our $DATE = '2023-06-09T19:29+09:00' ; 
 
 =encoding utf8
 
