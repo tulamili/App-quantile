@@ -82,7 +82,6 @@ sub LayerOut ( $ ) {  # 出力各行についての処理 :
 
   say BOLD join "\t" , & SelfWeight() , $layer if $o{w} || $o{3} ;
   sub SelfWeight () { 
-    #my $total = sum0 @V ; 
     my $total = sum0 map { $_ . '' } @V ; # dualvarの場合、文字列として格納された方(重み)だけが足される
     my @ths = map { $total * $_ / $Q } @xco ; # 閾値
     my ( $t, $t_ ) = ( 0 , 0 )  ; # 途中の合計
@@ -101,9 +100,6 @@ sub LayerOut ( $ ) {  # 出力各行についての処理 :
     return @ret ;
   }
 }
-
-
-
 
 sub midreport ( ) {
   #return if eof ;  # <-- ただコメントアウトしたら、意図通り動作するようになった。これで良かったのか?
@@ -142,7 +138,7 @@ sub Info2ndry ( ) {
 
  オプション : 
 
-  -= : 最初の行を読み飛ばす。
+  -= : 最初の1行を読み飛ばす。
   -q N : 分位分割の数Nを指定する。
   -p 1..5など : 何番目の分位点を出力するかを指定する。小数も指定可能。, や .. が使える。
   -a : 平均値も出力する(最も右の列に)。
